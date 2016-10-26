@@ -1,7 +1,9 @@
 var express   = require('express'),
     router    = express.Router(),
     db = require('./../db'),
-    ObjectId = require('mongodb').ObjectID
+    ObjectId = require('mongodb').ObjectID;
+
+var url = require('url');
 
     // Thanks to http://webapplog.com/tutorial-node-js-and-mongodb-json-rest-api-server-with-mongoskin-and-express-js/
     // for the cool help
@@ -15,7 +17,10 @@ var express   = require('express'),
 
   // GET /collections/:collectionName
     .get(function(req, res, next) {
-      req.collection.find({},{limit:10, sort: [['_id',-1]]}).toArray(function(e, results){
+      var url_parts = url.parse(request.url, true);
+      var query = url_parts.query;
+      var limit = req.query.limit || 10;
+      req.collection.find({},{limit:limit, sort: [['_id',-1]]}).toArray(function(e, results){
         if (e) { return next(e); }
         res.send(results);
       });

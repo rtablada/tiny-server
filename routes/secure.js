@@ -76,7 +76,10 @@ router.route('/:collectionName')
 
   // GET /collections/:collectionName
   .get(function(req, res, next) {
-    req.collection.find({},{limit:10, sort: [['_id',-1]]}).toArray(function(e, results){
+    var url_parts = url.parse(request.url, true);
+    var query = url_parts.query;
+    var limit = req.query.limit || 10;
+    req.collection.find({},{limit:limit, sort: [['_id',-1]]}).toArray(function(e, results){
       if (e) return next(e);
       res.send(results);
     });
